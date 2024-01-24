@@ -1,0 +1,109 @@
+<!-- Display home page -->
+{% extends "base.html" %} {% block title %}Home{% endblock %} {% block content
+%} {% if welcome_message %}
+<!-- Display welcome message for logged in users -->
+<h2 class="display-4">Home</h2>
+<hr />
+<h2>{{ welcome_message }}</h2>
+{% else %}
+<!-- Display a message for users not logged in -->
+<div class="alert alert-warning" role="alert">
+  Currently not logged in. <a href="/login" class="alert-link">Log in</a> or
+  <a href="/sign-up" class="alert-link">Sign up</a> here.
+</div>
+<h2 class="display-4">Home</h2>
+<hr />
+<h2>Welcome, guest!</h2>
+{% endif %} {% if location %} {% endif %}
+
+<!-- display Bing weather map -->
+<div
+  style="
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 10px;
+  "
+>
+  <div id="printoutPanel"></div>
+  <div id="myMap" style="width: 55vw; height: 55vh; padding: 10px"></div>
+</div>
+
+<script type="text/javascript">
+  var latitude = "{{ latitude }}";
+  var longitude = "{{ longitude }}";
+  if (!latitude || !longitude) {
+    latitude = 40.71304703;
+    longitude = -74.00723267;
+  }
+
+  function loadMapScenario() {
+    var map = new Microsoft.Maps.Map(document.getElementById("myMap"), {
+      /* No need to set credentials if already passed in URL */
+      center: new Microsoft.Maps.Location(latitude, longitude),
+      zoom: 5,
+    });
+    // tile url from Iowa Environmental Mesonet of Iowa State University
+    var urlTemplate =
+      "https://mesonet.agron.iastate.edu/cache/tile.py/1.0.0/nexrad-n0q-{timestamp}/{zoom}/{x}/{y}.png";
+    var timestamps = [
+      "900913-m50m",
+      "900913-m45m",
+      "900913-m40m",
+      "900913-m35m",
+      "900913-m30m",
+      "900913-m25m",
+      "900913-m20m",
+      "900913-m15m",
+      "900913-m10m",
+      "900913-m05m",
+      "900913",
+    ];
+    var tileSources = [];
+    for (var i = 0; i < timestamps.length; i++) {
+      var tileSource = new Microsoft.Maps.TileSource({
+        uriConstructor: urlTemplate.replace("{timestamp}", timestamps[i]),
+      });
+      tileSources.push(tileSource);
+    }
+    var animatedLayer = new Microsoft.Maps.AnimatedTileLayer({
+      mercator: tileSources,
+      frameRate: 500,
+    });
+    map.layers.insert(animatedLayer);
+  }
+</script>
+<script
+  type="text/javascript"
+  src="https://www.bing.com/api/maps/mapcontrol?key=AshcN6RhjXT-3ZKracTUWEY4k0Fp12VFo-TUzIbQO9KI6ecRi-in57eAS-SA4AvS&callback=loadMapScenario"
+  async
+  defer
+></script>
+
+<!-- Button to view current weather in home location -->
+<div style="display: flex; justify-content: center; align-items: center">
+  <ul class="list-group">
+    <div class="btn-group" role="group" aria-label="Button group">
+      <button
+        type="button"
+        class="btn btn-primary border"
+        onclick="location.href='/dashboard'"
+      >
+        View current weather conditions in {% if location %}{{ location }}{%
+        else %}New York City, NY{% endif %}
+      </button>
+    </div>
+  </ul>
+</div>
+
+<!-- Display information about the website -->
+<div style="padding: 15px">
+  <ul class="list-group">
+    <li class="list-group-item">
+      <h5>About</h5>
+      This platform offers users a comprehensive experience, providing access to detailed weather information for any location across the United States. Leveraging the robust capabilities of the weather.gov API, our website delivers accurate and up-to-date data, empowering users to stay informed about current and forecasted weather conditions in their desired areas. Whether you're planning a trip, monitoring local weather trends, or simply staying prepared, our intuitive interface ensures that you have the weather insights you need at your fingertips. Explore the richness of weather data seamlessly, making informed decisions tailored to your location with the help of our user-friendly and feature-rich weather service.
+    </li>
+  </ul>
+</div>
+
+{% endblock %}

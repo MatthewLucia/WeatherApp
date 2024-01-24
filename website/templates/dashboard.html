@@ -1,0 +1,224 @@
+<!-- Display weather information -->
+{% extends "base.html" %} {% block title %}Dashboard{% endblock %} {% block
+content %} {% if guest %}
+<!-- Display a message for users not logged in -->
+<div class="alert alert-warning" role="alert">
+  Currently not logged in. <a href="/login" class="alert-link">Log in</a> or
+  <a href="/sign-up" class="alert-link">Sign up</a> here.
+</div>
+{% endif %} {% if hist_data %}
+<!-- Display a message with link to historical data if available -->
+<div class="alert alert-info" role="alert">
+  Historical data available for {{ location[0] }}.
+  <a
+    href="{{ url_for('views.historical_data', location=location[0]) }}"
+    class="alert-link"
+    >Click Here</a
+  >
+  to access.
+</div>
+{% endif %} {% if 'Snow' or 'Snowy' or 'Blizzard' or 'Squall' in weather[3][0]
+%}
+<!-- Display icon based on current weather conditions -->
+<img
+  src="../static/snowy.png"
+  alt="Fair Weather"
+  width="335"
+  height="188"
+  style="float: right"
+/>
+{% elif ['Sunny', 'Clear', 'Bright'] in weather[3][0] %}
+<img
+  src="../static/sunny.png"
+  alt="Sunny Weather"
+  width="335"
+  height="188"
+  style="float: right"
+/>
+{% elif ['Haze', 'Fog', 'Mist'] in weather[3][0] or 'Fog' in weather[3][0] %}
+<img
+  src="../static/foggy.png"
+  alt="Foggy Weather"
+  width="335"
+  height="188"
+  style="float: right"
+/>
+{% elif ['Rain', 'Storm', 'Drizzle', 'Downpour', 'Showers', 'Thunderstorm'] in
+weather[3][0] %}
+<img
+  src="../static/rainy.png"
+  alt="Rainy Weather"
+  width="335"
+  height="188"
+  style="float: right"
+/>
+{% elif ['Cloudy', 'Overcast', 'Gloomy'] in weather[3][0] %}
+<img
+  src="../static/overcast.png"
+  alt="Overcast Weather"
+  width="335"
+  height="188"
+  style="float: right"
+/>
+{% else %}
+<img
+  src="../static/fair.png"
+  alt="Fair Weather"
+  width="335"
+  height="188"
+  style="float: right"
+/>
+{% endif %} {% if weather[4][0] < 32 %}
+<img
+  src="../static/freezing.png"
+  alt="Freezing Weather"
+  width="335"
+  height="188"
+  style="float: right"
+/>
+{% endif %}
+<h2 class="display-4">
+  Showing Weather {{ weather[2][0] }} in {{ location[0] }}
+</h2>
+<br />
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-md-6">
+        <!-- Display current conditions, temperature, humidity, and wind -->
+      <h3><b>Current conditions:</b> {{ weather[3][0] }}</h3>
+      <h3><b>Temperature:</b> {{ weather[4][0] }} &deg;F</h3>
+      <h3><b>Humidity:</b> {{ weather[5][0] }}%</h3>
+      <h3><b>Wind:</b> {{ weather[6][0] }}</h3>
+    </div>
+    <div class="border p-3 ml-auto text-center">
+        <!-- Display location details -->
+      <p><b>{{ location[0] }}</b></p>
+      <p>Longitude: {{ location[1] }} &deg;N</p>
+      <p>Latitude: {{ location[2] }} &deg;W</p>
+      <p>Elevation: {{ location[3] }} ft.</p>
+    </div>
+  </div>
+</div>
+<hr />
+<div
+  style="
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 10px;
+  "
+>
+  <div id="printoutPanel"></div>
+  <div id="myMap" style="width: 55vw; height: 55vh; padding: 10px"></div>
+</div>
+
+<script type="text/javascript">
+  var latitude = "{{ latitude }}";
+  var longitude = "{{ longitude }}";
+  if (!latitude || !longitude) {
+    latitude = 40.71304703;
+    longitude = -74.00723267;
+  }
+
+  function loadMapScenario() {
+    var map = new Microsoft.Maps.Map(document.getElementById("myMap"), {
+      center: new Microsoft.Maps.Location(latitude, longitude),
+      zoom: 5,
+    });
+    var urlTemplate =
+      "https://mesonet.agron.iastate.edu/cache/tile.py/1.0.0/nexrad-n0q-{timestamp}/{zoom}/{x}/{y}.png";
+    var timestamps = [
+      "900913-m50m",
+      "900913-m45m",
+      "900913-m40m",
+      "900913-m35m",
+      "900913-m30m",
+      "900913-m25m",
+      "900913-m20m",
+      "900913-m15m",
+      "900913-m10m",
+      "900913-m05m",
+      "900913",
+    ];
+    var tileSources = [];
+    for (var i = 0; i < timestamps.length; i++) {
+      var tileSource = new Microsoft.Maps.TileSource({
+        uriConstructor: urlTemplate.replace("{timestamp}", timestamps[i]),
+      });
+      tileSources.push(tileSource);
+    }
+    var animatedLayer = new Microsoft.Maps.AnimatedTileLayer({
+      mercator: tileSources,
+      frameRate: 500,
+    });
+    map.layers.insert(animatedLayer);
+  }
+</script>
+<script
+  type="text/javascript"
+  src="https://www.bing.com/api/maps/mapcontrol?key=AshcN6RhjXT-3ZKracTUWEY4k0Fp12VFo-TUzIbQO9KI6ecRi-in57eAS-SA4AvS&callback=loadMapScenario"
+  async
+  defer
+></script>
+{% for i in range(1, 13) %}
+<!-- Display forecase info for the next 12 periods -->
+<div>
+  {% if 'Cloudy' in weather[3][i] %}
+  <img
+    src="../static/fair.png"
+    alt="Fair Weather"
+    width="167"
+    height="94"
+    style="float: right"
+  />
+  {% elif 'Sunny' in weather[3][i] %}
+  <img
+    src="../static/sunny.png"
+    alt="Sunny Weather"
+    width="167"
+    height="94"
+    style="float: right"
+  />
+  {% elif 'Haze' in weather[3][i] or 'Fog' in weather[3][0] %}
+  <img
+    src="../static/foggy.png"
+    alt="Foggy Weather"
+    width="167"
+    height="94"
+    style="float: right"
+  />
+  {% elif 'Rain' in weather[3][i] %}
+  <img
+    src="../static/rainy.png"
+    alt="Rainy Weather"
+    width="167"
+    height="94"
+    style="float: right"
+  />
+  {% elif 'Snow' in weather[3][i] %}
+  <img
+    src="../static/snowy.png"
+    alt="Snowy Weather"
+    width="167"
+    height="94"
+    style="float: right"
+  />
+  {% else %}
+  <img
+    src="../static/freezing.png"
+    alt="Snowy Weather"
+    width="167"
+    height="94"
+    style="float: right"
+  />
+  {% endif %}
+  <hr />
+  <h3>{{ weather[2][i] }}</h3>
+  <ul class="list-unstyled">
+    <li><b>Conditions:</b> {{ weather[3][i] }}</li>
+    <li><b>Temperature:</b> {{ weather[4][i] }} &deg;F</li>
+    <li><b>Humidity:</b> {{ weather[5][i] }}%</li>
+    <li><b>Wind speed:</b> {{ weather[6][i] }}</li>
+  </ul>
+</div>
+{% endfor %} {% endblock %}

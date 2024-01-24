@@ -1,0 +1,258 @@
+<!-- Display and update account information -->
+{% extends "base.html" %} {% block title %}Account Settings{% endblock %} {%
+block content %} {% if user %}
+<!-- Display user information if logged in -->
+<h2 class="display-4">My Information</h2>
+<hr />
+{% else %}
+<!-- Display a message for users not logged in -->
+<div class="alert alert-warning" role="alert">
+  Currently not logged in. <a href="/login" class="alert-link">Log in</a> or
+  <a href="/sign-up" class="alert-link">Sign up</a> here.
+</div>
+{% endif %}
+<!-- Button to return home -->
+<div class="btn-group" role="group" aria-label="Button group">
+  <button
+    type="button"
+    class="btn btn-secondary border"
+    onclick="location.href='/'"
+  >
+    Return Home
+  </button>
+</div>
+<br />
+<br />
+{% if user %}
+<!-- Display user details with update options -->
+<ul class="list-group">
+  <li class="list-group-item" style="width: 50%">
+    <!-- User email with update option -->
+    <b>Email:</b> {{ user['email'] }}
+    <div style="position: absolute; right: 10px; top: 5px">
+      <button
+        type="button"
+        class="btn btn-link"
+        data-toggle="collapse"
+        data-target="#updateEmail"
+      >
+        Update
+      </button>
+    </div>
+    <!-- Update form for email -->
+    <div class="collapse" id="updateEmail">
+      <hr />
+      <form action="/update_account" method="POST">
+        <div class="form-group" style="width: 25%">
+          <label for="newEmail">Enter new email:</label>
+          <input
+            type="email"
+            name="newEmail"
+            id="newEmail"
+            placeholder="example@domain.com"
+          />
+        </div>
+        <button type="submit" class="btn btn-primary">Submit</button>
+      </form>
+    </div>
+  </li>
+  <li class="list-group-item" style="width: 50%">
+    <!-- User first name with update option -->
+    <b>First Name:</b> {{ user['first_name'] }}
+    <div style="position: absolute; right: 10px; top: 5px">
+      <button
+        type="button"
+        class="btn btn-link"
+        data-toggle="collapse"
+        data-target="#updateFirstName"
+      >
+        Update
+      </button>
+    </div>
+    <!-- Update form for first name -->
+    <div class="collapse" id="updateFirstName">
+      <hr />
+      <form action="/update_account" method="POST">
+        <div class="form-group" style="width: 25%">
+          <label for="newFirstName">Enter new first name:</label>
+          <input
+            type="text"
+            name="newFirstName"
+            id="newFirstName"
+            placeholder="John"
+          />
+        </div>
+        <button type="submit" class="btn btn-primary">Submit</button>
+      </form>
+    </div>
+  </li>
+  <li class="list-group-item" style="width: 50%">
+    <!-- User last name with update option -->
+    <b>Last name:</b> {{ user['last_name'] }}
+    <div style="position: absolute; right: 10px; top: 5px">
+      <button
+        type="button"
+        class="btn btn-link"
+        data-toggle="collapse"
+        data-target="#updateLastName"
+      >
+        Update
+      </button>
+    </div>
+    <!-- Update form for last name -->
+    <div class="collapse" id="updateLastName">
+      <hr />
+      <form action="/update_account" method="POST">
+        <div class="form-group" style="width: 25%">
+          <label for="newLastName">Enter new last name:</label>
+          <input
+            type="text"
+            name="newLastName"
+            id="newLastName"
+            placeholder="Smith"
+          />
+        </div>
+        <button type="submit" class="btn btn-primary">Submit</button>
+      </form>
+    </div>
+  </li>
+  <li class="list-group-item" style="width: 50%">
+    <!-- User home location with update option -->
+    <b>Home Location:</b> {{ user['city'] }}, {{ user['state'] }}
+    <div style="position: absolute; right: 10px; top: 5px">
+      <button
+        type="button"
+        class="btn btn-link"
+        data-toggle="collapse"
+        data-target="#updateLocation"
+      >
+        Update
+      </button>
+    </div>
+    <!-- Update form for home location -->
+    <div class="collapse" id="updateLocation">
+      <hr />
+      <form action="/update_account" method="POST">
+        <div class="form-group" style="width: 25%">
+          <label for="newCity">Enter new city:</label>
+          <input
+            type="text"
+            name="newCity"
+            id="newCity"
+            placeholder="Chicago"
+          />
+
+          <select id="newState" name="newState" required>
+            <option value="" selected disabled>Select a state</option>
+            <option value="AL">Alabama</option>
+            <option value="AK">Alaska</option>
+            <option value="AZ">Arizona</option>
+            <option value="AR">Arkansas</option>
+            <option value="CA">California</option>
+            <option value="CO">Colorado</option>
+            <option value="CT">Connecticut</option>
+            <option value="DE">Delaware</option>
+            <option value="FL">Florida</option>
+            <option value="GA">Georgia</option>
+            <option value="HI">Hawaii</option>
+            <option value="ID">Idaho</option>
+            <option value="IL">Illinois</option>
+            <option value="IN">Indiana</option>
+            <option value="IA">Iowa</option>
+            <option value="KS">Kansas</option>
+            <option value="KY">Kentucky</option>
+            <option value="LA">Louisiana</option>
+            <option value="ME">Maine</option>
+            <option value="MD">Maryland</option>
+            <option value="MA">Massachusetts</option>
+            <option value="MI">Michigan</option>
+            <option value="MN">Minnesota</option>
+            <option value="MS">Mississippi</option>
+            <option value="MO">Missouri</option>
+            <option value="MT">Montana</option>
+            <option value="NE">Nebraska</option>
+            <option value="NV">Nevada</option>
+            <option value="NH">New Hampshire</option>
+            <option value="NJ">New Jersey</option>
+            <option value="NM">New Mexico</option>
+            <option value="NY">New York</option>
+            <option value="NC">North Carolina</option>
+            <option value="ND">North Dakota</option>
+            <option value="OH">Ohio</option>
+            <option value="OK">Oklahoma</option>
+            <option value="OR">Oregon</option>
+            <option value="PA">Pennsylvania</option>
+            <option value="RI">Rhode Island</option>
+            <option value="SC">South Carolina</option>
+            <option value="SD">South Dakota</option>
+            <option value="TN">Tennessee</option>
+            <option value="TX">Texas</option>
+            <option value="UT">Utah</option>
+            <option value="VT">Vermont</option>
+            <option value="VA">Virginia</option>
+            <option value="WA">Washington</option>
+            <option value="WV">West Virginia</option>
+            <option value="WI">Wisconsin</option>
+            <option value="WY">Wyoming</option>
+          </select>
+        </div>
+        <button type="submit" class="btn btn-primary">Submit</button>
+      </form>
+    </div>
+  </li>
+  <li class="list-group-item" style="width: 50%">
+    <!-- User preferences with update option -->
+    <b>Preferences:</b> {{ user['preferences'] }}
+    <div style="position: absolute; right: 10px; top: 5px">
+      <button
+        type="button"
+        class="btn btn-link"
+        data-toggle="collapse"
+        data-target="#updatePreferences"
+      >
+        Update
+      </button>
+    </div>
+    <!-- Update preferences form -->
+    <div class="collapse" id="updatePreferences">
+      <hr />
+      <form action="/update_account" method="POST">
+        <div class="form-group" style="width: 25%">
+          <label for="newPreferences">Select to join our emailing list:</label>
+          <input type="checkbox" name="newPreferences" id="newPreferences" />
+        </div>
+        <button type="submit" class="btn btn-primary">Submit</button>
+      </form>
+    </div>
+  </li>
+</ul>
+<br />
+<!-- Buttons for logout and account deletion -->
+<div class="btn-group" role="group" aria-label="Button group">
+  <button
+    type="button"
+    class="btn btn-warning border"
+    onclick="location.href='/logout'"
+  >
+    Log out
+  </button>
+  <button
+    type="button"
+    class="btn btn-danger border"
+    data-toggle="collapse"
+    data-target="#deleteAccount"
+  >
+    Delete Account
+  </button>
+  <!-- Confirmation button for account deletion -->
+  <div class="collapse" id="deleteAccount">
+    <button
+      type="button"
+      class="btn btn-danger border"
+      onclick="location.href='/delete_account'"
+    >
+      Confirm Delete
+    </button>
+  </div>
+</div>
+{% endif %} {% endblock %}
