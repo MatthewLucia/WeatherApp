@@ -115,15 +115,17 @@ weather[3][0] %}
 <script type="text/javascript">
   var latitude = "{{ latitude }}";
   var longitude = "{{ longitude }}";
+  var zoom = 10;
   if (!latitude || !longitude) {
     latitude = 40.71304703;
     longitude = -74.00723267;
+    var zoom = 5;
   }
 
   function loadMapScenario() {
     var map = new Microsoft.Maps.Map(document.getElementById("myMap"), {
       center: new Microsoft.Maps.Location(latitude, longitude),
-      zoom: 5,
+      zoom: zoom,
     });
     var urlTemplate =
       "https://mesonet.agron.iastate.edu/cache/tile.py/1.0.0/nexrad-n0q-{timestamp}/{zoom}/{x}/{y}.png";
