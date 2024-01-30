@@ -17,7 +17,7 @@ Responsive Design
 Flask Framework
   - Developed using Flask, a micro web framework for Python, the project follows Flask conventions, ensuring maintainability and scalability.
 Session Management
-  - Utilizing Flask's session management features, the app enhances user experience with persistent sessions, signed cookies, and filesystem-based storage.
+  - Utilizing Flask's session management features, the app enhances user experience with persistent sessions.
 Code Organization
   - The codebase is well-organized, with clear separation of concerns, making it easy to understand and extend. Formal code comments are provided throughout to facilitate collaboration and future development.
 External APIs
